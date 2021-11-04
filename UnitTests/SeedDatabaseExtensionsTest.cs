@@ -26,7 +26,7 @@ namespace UnitTests
                 context.Database.EnsureCreated();
 
                 string callingAssemblyPath = TestData.GetCallingAssemblyTopLevelDir();
-                var dataDir = Path.GetFullPath(Path.Combine(callingAssemblyPath, "..\\Infrastructure\\Data\\SeedData"));
+                var dataDir = Path.GetFullPath(Path.Combine(callingAssemblyPath, @"..\Infrastructure\Data\SeedData"));
 
                 await context.SeedDatabaseIfNoComponentsAsync(dataDir);
                 int count = await context.Components.CountAsync();
@@ -52,7 +52,7 @@ namespace UnitTests
                 context.Database.EnsureCreated();
 
                 string callingAssemblyPath = TestData.GetCallingAssemblyTopLevelDir();
-                var dataDir = Path.GetFullPath(Path.Combine(callingAssemblyPath, "..\\Infrastructure\\Data\\SeedData"));
+                var dataDir = Path.GetFullPath(Path.Combine(callingAssemblyPath, @"..\Infrastructure\Data\SeedData"));
 
                 await context.SeedDatabaseIfNoComponentsAsync(dataDir);
                 int count = await context.Components.CountAsync();
