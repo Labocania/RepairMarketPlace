@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Kingston HyperX Cloud Alpha S",
+    "rating": 4,
+    "rating_count": 2,
+    "price_usd": 89.99,
+    "type": "Circumaural",
+    "frequency_response": "13 Hz - 27 kHz",
+    "microphone": true,
+    "wireless": false,
+    "enclosure_type": "Closed",
+    "color": "Blue / Black"
+  },
+  {
+    "name": "Astro Gaming A10",
+    "rating": 0,
+    "rating_count": 0,
+    "price_usd": 49.99,
+    "type": "Circumaural",
+    "frequency_response": "20 Hz - 20 kHz",
+    "microphone": true,
+    "wireless": false,
+    "enclosure_type": "Closed",
+    "color": "Black / Red"
+  }
+]

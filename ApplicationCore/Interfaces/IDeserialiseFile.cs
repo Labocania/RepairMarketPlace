@@ -2,6 +2,6 @@
 {
     public interface IDeserializeFile<T>
     {
-        public T DeserializeFile(string filename);
+        public T DeserializeFile(string filePath);
     }
 }

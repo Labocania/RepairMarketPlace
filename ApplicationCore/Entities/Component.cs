@@ -10,6 +10,7 @@ namespace RepairMarketPlace.ApplicationCore.Entities
     {
         [Required]
         [MaxLength(256)]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
         [JsonIgnore]

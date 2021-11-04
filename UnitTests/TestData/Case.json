@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Corsair 4000D Airflow",
+    "rating": 4,
+    "rating_count": 78,
+    "price_usd": 94.99,
+    "type": "ATX Mid Tower",
+    "color": "Black",
+    "power_supply": null,
+    "side_panel_window": "Tinted Tempered Glass",
+    "external_5.25\"_bays": "0",
+    "internal_3.5\"_bays": "2"
+  },
+  {
+    "name": "Phanteks Eclipse P300A Mesh",
+    "rating": 4,
+    "rating_count": 33,
+    "price_usd": 49.99,
+    "type": "ATX Mid Tower",
+    "color": "Black",
+    "power_supply": null,
+    "side_panel_window": "Tempered Glass",
+    "external_5.25\"_bays": "0",
+    "internal_3.5\"_bays": "2"
+  }
+]

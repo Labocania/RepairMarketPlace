@@ -13,11 +13,11 @@ namespace RepairMarketPlace.Infrastructure.Services
 {
     public class FileDeserializer : IDeserializeFile<List<Component>>
     {
-        public List<Component> DeserializeFile(string filename)
+        public List<Component> DeserializeFile(string filePath)
         {
             List<Component> components = new();
 
-            using (FileStream openStream = File.OpenRead(filename))
+            using (FileStream openStream = File.OpenRead(filePath))
             {
                 JsonDocument document = JsonDocument.Parse(openStream);
 
@@ -26,7 +26,7 @@ namespace RepairMarketPlace.Infrastructure.Services
                     foreach (var element in document.RootElement.EnumerateArray())
                     {
                         Component component = element.ToObject<Component>();
-                        component.Type = FileNameToEnumConverter(filename);
+                        component.Type = FileNameToEnumConverter(Path.GetFileName(filePath));
                         components.Add(component);
                     }
                 }
@@ -37,7 +37,8 @@ namespace RepairMarketPlace.Infrastructure.Services
 
         ComponentType FileNameToEnumConverter(string filename)
         {
-            return Enum.Parse<ComponentType>(filename);
+            string name = filename.Replace(".json", "");
+            return Enum.Parse<ComponentType>(name);
         }
     }
 }
