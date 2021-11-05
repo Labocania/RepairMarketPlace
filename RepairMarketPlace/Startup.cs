@@ -32,7 +32,12 @@ namespace RepairMarketPlace
             services.AddDbProvider(Environment, Configuration);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AppDbContext>();
+            services.AddDefaultIdentity<IdentityUser>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                    options.Lockout.AllowedForNewUsers = true;
+                    options.Password.RequiredLength = 12;
+                }).AddEntityFrameworkStores<AppDbContext>();
             services.AddRazorPages();
         }
 
