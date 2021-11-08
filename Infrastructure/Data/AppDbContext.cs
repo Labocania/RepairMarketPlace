@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RepairMarketPlace.ApplicationCore.Entities;
+using RepairMarketPlace.Infrastructure.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,5 +16,6 @@ namespace RepairMarketPlace.Infrastructure.Data
         }
 
         public DbSet<Component> Components { get; set; }
+        public DbSet<User> AppUsers { get; set; } 
     }
 }

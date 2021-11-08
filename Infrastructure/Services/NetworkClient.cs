@@ -31,10 +31,12 @@ namespace RepairMarketPlace.Infrastructure.Services
                 {
                     _logger.LogError("Error trying to connect: {0}", ex.Message);
                     _logger.LogError("\tStatusCode: {0}", ex.StatusCode);
+                    throw;
                 }
                 catch(SmtpProtocolException ex)
                 {
                     _logger.LogError("Protocol error while trying to connect: {0}", ex.Message);
+                    throw;
                 }
 
                 try
@@ -44,15 +46,18 @@ namespace RepairMarketPlace.Infrastructure.Services
                 catch (AuthenticationException ex)
                 {
                     _logger.LogError("Invalid user name or password. Link: {0}", ex.Message);
+                    throw;
                 }
                 catch (SmtpCommandException ex)
                 {
                     _logger.LogError("Error trying to authenticate: {0}", ex.Message);
                     _logger.LogError("\tStatusCode: {0}", ex.StatusCode);
+                    throw;
                 }
                 catch (SmtpProtocolException ex)
                 {
                     _logger.LogError("Protocol error while trying to authenticate: {0}", ex.Message);
+                    throw;
                 }
 
                 try
@@ -79,14 +84,17 @@ namespace RepairMarketPlace.Infrastructure.Services
                             _logger.LogError(ex.Message);
                             break;
                     }
+                    throw;
                 }
                 catch (SmtpProtocolException ex)
                 {
                     _logger.LogError("Protocol error while sending message: {0}", ex.Message);
+                    throw;
                 }
                 catch(ServiceNotAuthenticatedException ex)
                 {
                     _logger.LogError("Authentication Required. Learn more at: {0}", ex.Message);
+                    throw;
                 }
 
                 await client.DisconnectAsync(true);

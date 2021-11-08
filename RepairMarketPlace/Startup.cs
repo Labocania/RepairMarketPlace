@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RepairMarketPlace.ApplicationCore.Interfaces;
 using RepairMarketPlace.Infrastructure.Data;
+using RepairMarketPlace.Infrastructure.Identity;
 using RepairMarketPlace.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace RepairMarketPlace
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<IdentityUser>(options =>
+            services.AddDefaultIdentity<User>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = true;
                     options.Lockout.AllowedForNewUsers = true;
