@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RepairMarketPlace.ApplicationCore.Interfaces;
 using RepairMarketPlace.Infrastructure.Data;
+using RepairMarketPlace.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,13 +34,29 @@ namespace RepairMarketPlace
             services.AddDbProvider(Environment, Configuration);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
+
             services.AddDefaultIdentity<IdentityUser>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = true;
                     options.Lockout.AllowedForNewUsers = true;
                     options.Password.RequiredLength = 12;
                 }).AddEntityFrameworkStores<AppDbContext>();
+
             services.AddRazorPages();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+            EmailServerSettings settings = new();
+            Configuration.GetSection("EmailServerSettings").Bind(settings);
+            services.AddSingleton(settings);
+            /*
+             *  services.AddSingleton(provider =>
+                new EmailServerSettings
+                (
+                    host: "smtp.server.com",
+                    port: 25
+                ));
+             */
+            services.AddSingleton<NetworkClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
