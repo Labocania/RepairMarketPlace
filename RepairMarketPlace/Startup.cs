@@ -42,6 +42,11 @@ namespace RepairMarketPlace
                     options.Lockout.AllowedForNewUsers = true;
                     options.Password.RequiredLength = 12;
                 }).AddEntityFrameworkStores<AppDbContext>();
+            services.AddAuthentication().AddMicrosoftAccount(microsoftOptions =>
+            {
+                microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+                microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
+            });
 
             services.AddRazorPages();
 
