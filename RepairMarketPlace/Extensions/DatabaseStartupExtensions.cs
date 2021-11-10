@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RepairMarketPlace;
 using RepairMarketPlace.Infrastructure.Data;
 using RepairMarketPlace.Infrastructure.Extensions;
+using RepairMarketPlace.Infrastructure.Identity;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Web.Extensions
@@ -18,14 +20,21 @@ namespace Web.Extensions
         {
             using (var scope = webHost.Services.CreateScope())
             {
-                var services = scope.ServiceProvider;
-                var env = services.GetRequiredService<IWebHostEnvironment>();
-                var context = services.GetRequiredService<AppDbContext>();
+                IServiceProvider services = scope.ServiceProvider;
+                IWebHostEnvironment env = services.GetRequiredService<IWebHostEnvironment>();
+                IConfiguration config = services.GetRequiredService<IConfiguration>();
+                AppDbContext context = services.GetRequiredService<AppDbContext>();
+                UserManager<User> userManager = services.GetRequiredService<UserManager<User>>();
                 try
                 {
-                    if (!context.Components.Any())
+                    if (!context.Components.AnyAsync().Result)
                     {
                         await context.SeedDatabaseIfNoComponentsAsync(@"..\Infrastructure\Data\SeedData");
+                    }
+
+                    if (!context.AppUsers.AnyAsync(user => user.Email == config["AdminCredentials:Login"]).Result)
+                    {
+                        await userManager.SeedAdminUser(config);
                     }
                 }
                 catch (Exception ex)

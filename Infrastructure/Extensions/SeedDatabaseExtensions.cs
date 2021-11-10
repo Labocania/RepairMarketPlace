@@ -1,7 +1,11 @@
-﻿using RepairMarketPlace.Infrastructure.Data;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using RepairMarketPlace.Infrastructure.Data;
+using RepairMarketPlace.Infrastructure.Identity;
 using RepairMarketPlace.Infrastructure.Services;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace RepairMarketPlace.Infrastructure.Extensions
@@ -36,6 +40,23 @@ namespace RepairMarketPlace.Infrastructure.Extensions
             }
 
             return fileList;
+        }
+
+        public static async Task SeedAdminUser(this UserManager<User> userManager, IConfiguration config)
+        {
+            User adminUser = new() 
+            { 
+                UserName = config["AdminCredentials:Login"], 
+                Email = config["AdminCredentials:Login"],
+                EmailConfirmed = true,
+                Name = "Jackson Bright", 
+                Birthday = new System.DateTime(1990, 1, 1) 
+            };
+            IdentityResult result = await userManager.CreateAsync(adminUser, config["AdminCredentials:Password"]);
+            if (result.Succeeded)
+            {
+                await userManager.AddClaimAsync(adminUser, new Claim("Role", "Admin"));
+            }
         }
     }
 }

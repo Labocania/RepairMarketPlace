@@ -1,8 +1,6 @@
 ﻿using Xunit;
-using System.Collections.Generic;
 using TestSupport.Helpers;
 using System.IO;
-using TestSupport.EfHelpers;
 using RepairMarketPlace.Infrastructure.Data;
 using RepairMarketPlace.Infrastructure.Extensions;
 using System.Threading.Tasks;
