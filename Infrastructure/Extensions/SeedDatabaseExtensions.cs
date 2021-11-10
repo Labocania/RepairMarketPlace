@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using RepairMarketPlace.ApplicationCore.Entities;
 using RepairMarketPlace.Infrastructure.Data;
 using RepairMarketPlace.Infrastructure.Identity;
 using RepairMarketPlace.Infrastructure.Services;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -12,23 +16,38 @@ namespace RepairMarketPlace.Infrastructure.Extensions
 {
     public static class SeedDatabaseExtensions
     {
-        public static async Task<int> SeedDatabaseIfNoComponentsAsync(this AppDbContext context, string dataDirectory)
+        public static async Task SeedDatabaseIfNoComponentTypeAsync(this AppDbContext context, string dataDirectory)
         {
-            int numComponents = context.Components.Count();
-            if (numComponents == 0)
+            string[] filePaths = GetJsonFiles(dataDirectory);
+            foreach (string filePath in filePaths)
             {
-                string[] filePaths = GetJsonFiles(dataDirectory);
-                FileDeserializer fileDeserializer = new();
-
-                foreach (string filePath in filePaths)
-                {
-                    await context.Components.AddRangeAsync(fileDeserializer.DeserializeFile(filePath));
-                    numComponents++;
-                }
-
-                await context.SaveChangesAsync();
+                string fileName = Path.GetFileName(filePath).Replace(".json", "");
+                context.ComponentTypes.Add(new ComponentType() { Name = fileName });
             }
-            return numComponents;
+
+            await context.SaveChangesAsync();
+        }
+
+        public static async Task SeedDatabaseIfNoComponentsAsync(this AppDbContext context, string dataDirectory)
+        {
+            string[] filePaths = GetJsonFiles(dataDirectory);
+            FileDeserializer fileDeserializer = new();
+
+            foreach (string filePath in filePaths)
+            {
+                string fileName = Path.GetFileName(filePath).Replace(".json", "");
+                int componentTypeId = context.ComponentTypes.AsNoTracking().Where(x => x.Name == fileName).Select(x => x.Id).FirstOrDefault();
+
+                HashSet<Component> components = fileDeserializer.DeserializeFile(filePath);
+
+                foreach (Component component in components)
+                {
+                    component.ComponentTypeId = componentTypeId;
+                }
+                await context.Components.AddRangeAsync(components);
+            }
+
+            await context.SaveChangesAsync();
         }
 
         static string[] GetJsonFiles(string dataDirectory)

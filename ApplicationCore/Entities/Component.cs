@@ -13,9 +13,9 @@ namespace RepairMarketPlace.ApplicationCore.Entities
         [JsonPropertyName("name")]
         public string Name { get; set; }
 
+        //-----------------------------------------------
         // Relationships
         [JsonIgnore]
-        [Required]
         public ComponentType Type { get; set; }
         public int ComponentTypeId { get; set; }
     }

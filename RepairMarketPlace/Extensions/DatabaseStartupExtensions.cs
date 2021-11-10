@@ -27,12 +27,18 @@ namespace Web.Extensions
                 UserManager<User> userManager = services.GetRequiredService<UserManager<User>>();
                 try
                 {
-                    if (!context.Components.AnyAsync().Result)
+                    bool anyComponentType = await context.ComponentTypes.AnyAsync();
+                    if (!anyComponentType)
+                    {
+                        await context.SeedDatabaseIfNoComponentTypeAsync(@"..\Infrastructure\Data\SeedData");
+                    }
+
+                    if (anyComponentType && !await context.Components.AnyAsync())
                     {
                         await context.SeedDatabaseIfNoComponentsAsync(@"..\Infrastructure\Data\SeedData");
                     }
 
-                    if (!context.AppUsers.AnyAsync(user => user.Email == config["AdminCredentials:Login"]).Result)
+                    if (!await context.AppUsers.AnyAsync(user => user.Email == config["AdminCredentials:Login"]))
                     {
                         await userManager.SeedAdminUser(config);
                     }

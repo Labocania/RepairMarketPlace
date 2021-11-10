@@ -14,6 +14,35 @@ namespace UnitTests
     public class SeedDatabaseExtensionsTest
     {
         [Fact]
+        public async Task SeedDatabaseIfNoComponentTypeHappyPath()
+        {
+            DbContextOptions<AppDbContext> options = DbContextExtensions.CreateUniqueClassOptions<AppDbContext>(this);
+            using (AppDbContext context = new AppDbContext(options))
+            {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+                string callingAssemblyPath = TestData.GetCallingAssemblyTopLevelDir();
+                string dataDir = Path.GetFullPath(Path.Combine(callingAssemblyPath, @"..\Infrastructure\Data\SeedData"));
+                int idealCount = 25;
+                System.Random random = new();
+
+                await context.SeedDatabaseIfNoComponentTypeAsync(dataDir);
+
+                IQueryable<ComponentType> query = context.ComponentTypes.AsNoTracking();
+
+                int queryCount = await query.CountAsync();
+                Assert.Equal(idealCount, queryCount);
+
+ 
+                int randomId = random.Next(1, queryCount);
+                ComponentType componentType = await query.FirstAsync(x => x.Id == randomId);
+                Assert.NotNull(componentType);
+                Assert.NotNull(componentType.Name);
+                Assert.False(componentType.Name == $"{componentType.Name}.json");
+            }
+        }
+
+        [Fact]
         public async Task SeedDatabaseIfNoComponentsHappyPath()
         {
             DbContextOptions<AppDbContext> options = DbContextExtensions.CreateUniqueClassOptions<AppDbContext>(this);
@@ -26,39 +55,28 @@ namespace UnitTests
                 string callingAssemblyPath = TestData.GetCallingAssemblyTopLevelDir();
                 var dataDir = Path.GetFullPath(Path.Combine(callingAssemblyPath, @"..\Infrastructure\Data\SeedData"));
 
+                await context.SeedDatabaseIfNoComponentTypeAsync(dataDir);
                 await context.SeedDatabaseIfNoComponentsAsync(dataDir);
-                int count = await context.Components.CountAsync();
-                IQueryable<Component> query = context.Components.AsNoTracking();
-                bool nameQuery = await query.Where(x => x.Name == null).AnyAsync();
-                //bool typeQuery = await query.Where(x => x.Type == ComponentType.CPU).AnyAsync();
-               //Component component = query.Where(x => x.Name == "Kingston HyperX Cloud Alpha S" && x.Type == ComponentType.Headphones).FirstOrDefault();
 
-                Assert.False(nameQuery);
-                //Assert.True(typeQuery);
-                //Assert.NotNull(component);
-            }
-        }
+                IQueryable<Component> componentQuery = context.Components.AsNoTracking().Include(x => x.Type);
+                bool nullNameQuery = await componentQuery.Where(x => x.Name == null).AnyAsync();
+                bool nullRelationshipQuery = await componentQuery.Where(x => x.Type == null).AnyAsync();
+                Component component = componentQuery.Where(x => x.Name == "Kingston HyperX Cloud Alpha S").FirstOrDefault();
 
-        [Fact]
-        public async Task SeedDatabaseIfNoComponentsEdgePath()
-        {
-            DbContextOptions<AppDbContext> options = DbContextExtensions.CreateUniqueClassOptions<AppDbContext>(this);
+                Assert.False(nullNameQuery);
+                Assert.False(nullRelationshipQuery);
+                Assert.NotNull(component);
+                Assert.NotNull(component.Type);
+                Assert.Equal("Headphones", component.Type.Name);
 
-            using (AppDbContext context = new AppDbContext(options))
-            {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
+                IQueryable<ComponentType> componentTypeQuery = context.ComponentTypes.AsNoTracking().Include(x => x.Components);
+                nullNameQuery = await componentTypeQuery.Where(x => x.Name == null).AnyAsync();
+                nullRelationshipQuery = await componentTypeQuery.Where(x => x.Components == null).AnyAsync();
+                ComponentType componentType = await componentTypeQuery.FirstOrDefaultAsync();
 
-                string callingAssemblyPath = TestData.GetCallingAssemblyTopLevelDir();
-                var dataDir = Path.GetFullPath(Path.Combine(callingAssemblyPath, @"..\Infrastructure\Data\SeedData"));
-
-                await context.SeedDatabaseIfNoComponentsAsync(dataDir);
-                int count = await context.Components.CountAsync();
-                Assert.True(count > 0);
-
-                await context.SeedDatabaseIfNoComponentsAsync(dataDir);
-                int secondCount = await context.Components.CountAsync();
-                Assert.Equal(count, secondCount);
+                Assert.False(nullNameQuery);
+                Assert.False(nullRelationshipQuery);
+                Assert.NotNull(componentType);
             }
         }
     }

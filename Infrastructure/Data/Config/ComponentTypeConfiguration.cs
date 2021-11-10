@@ -8,7 +8,7 @@ namespace RepairMarketPlace.Infrastructure.Data.Config
     {
         public void Configure(EntityTypeBuilder<ComponentType> builder)
         {
-            builder.Property(x => x.Name).HasConversion<string>();
+            builder.HasIndex(x => x.Name);
         }
     }
 }
