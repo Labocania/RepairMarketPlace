@@ -6,7 +6,8 @@
     @if (SignInManager.IsSignedIn(User))
     {
 
-        var name = UserManager.GetUserAsync(User).Result.Name ?? User.Identity.Name;
+        var user = await UserManager.GetUserAsync(User);
+        string name = user == null ? User.Identity.Name : user.Name;
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @name!</a>
         </li>

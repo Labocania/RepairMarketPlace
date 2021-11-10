@@ -27,14 +27,9 @@ namespace Web.Extensions
                 UserManager<User> userManager = services.GetRequiredService<UserManager<User>>();
                 try
                 {
-                    bool anyComponentType = await context.ComponentTypes.AnyAsync();
-                    if (!anyComponentType)
+                    if (!await context.ComponentTypes.AnyAsync())
                     {
                         await context.SeedDatabaseIfNoComponentTypeAsync(@"..\Infrastructure\Data\SeedData");
-                    }
-
-                    if (anyComponentType && !await context.Components.AnyAsync())
-                    {
                         await context.SeedDatabaseIfNoComponentsAsync(@"..\Infrastructure\Data\SeedData");
                     }
 
