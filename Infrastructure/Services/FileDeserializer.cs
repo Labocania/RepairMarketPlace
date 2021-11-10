@@ -28,7 +28,7 @@ namespace RepairMarketPlace.Infrastructure.Services
                         {
                             continue;
                         }
-                        component.Type = FileNameToEnumConverter(Path.GetFileName(filePath));
+                        //component.Type = FileNameToEnumConverter(Path.GetFileName(filePath));
                         components.Add(component);
                     }
                 }
@@ -36,12 +36,13 @@ namespace RepairMarketPlace.Infrastructure.Services
 
             return components;
         }
-
+        /*
         ComponentType FileNameToEnumConverter(string filename)
         {
             string name = filename.Replace(".json", "");
             return Enum.Parse<ComponentType>(name);
         }
+        */
     }
 
     class ComponentEqualityComparer : IEqualityComparer<Component>

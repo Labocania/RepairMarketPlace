@@ -18,12 +18,12 @@ namespace UnitTests
                 new Component()
                 {
                     Name = "Corsair 4000D Airflow",
-                    Type = ComponentType.Case
+                    //Type = ComponentType.Case
                 },
                 new Component()
                 {
                     Name = "Phanteks Eclipse P300A Mesh",
-                    Type = ComponentType.Case
+                    //Type = ComponentType.Case
                 }
             };
 

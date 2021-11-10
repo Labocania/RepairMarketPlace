@@ -16,6 +16,7 @@ namespace RepairMarketPlace.Infrastructure.Data
         }
 
         public DbSet<Component> Components { get; set; }
+        public DbSet<ComponentType> ComponentTypes { get; set; }
         public DbSet<User> AppUsers { get; set; } 
     }
 }
