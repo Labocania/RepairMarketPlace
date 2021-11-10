@@ -15,11 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Logging\" />
+    <ProjectReference Include="..\ApplicationCore\ApplicationCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApplicationCore\ApplicationCore.csproj" />
+    <Folder Include="Logging\" />
   </ItemGroup>
 
 </Project>

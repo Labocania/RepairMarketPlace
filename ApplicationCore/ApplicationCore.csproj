@@ -8,8 +8,8 @@
   <ItemGroup>
     <Folder Include="Constants\" />
     <Folder Include="Exceptions\" />
-    <Folder Include="Specifications\" />
     <Folder Include="Services\" />
+    <Folder Include="Specifications\" />
   </ItemGroup>
 
 </Project>
