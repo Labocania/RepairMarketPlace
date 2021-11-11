@@ -17,11 +17,11 @@ namespace UnitTests
             {
                 new Component()
                 {
-                    Name = "Corsair 4000D Airflow",
+                    Name = "Corsair 4000D Airflow"
                 },
                 new Component()
                 {
-                    Name = "Phanteks Eclipse P300A Mesh",
+                    Name = "Phanteks Eclipse P300A Mesh"
                 }
             };
 
