@@ -20,5 +20,7 @@ namespace RepairMarketPlace.ApplicationCore.Entities
                 return _components?.ToList();
             }
         }
+
+        ICollection<ServiceType> ServiceTypes { get; set; }
     }
 }

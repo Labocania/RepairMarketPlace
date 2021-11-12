@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using RepairMarketPlace.ApplicationCore.Entities;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace RepairMarketPlace.Infrastructure.Identity
