@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RepairMarketPlace.ApplicationCore.Interfaces;
+using RepairMarketPlace.ApplicationCore.Interfaces.Repository;
+using RepairMarketPlace.ApplicationCore.Services;
 using RepairMarketPlace.Infrastructure.Data;
 using RepairMarketPlace.Infrastructure.Identity;
 using RepairMarketPlace.Infrastructure.Services;
@@ -60,15 +62,10 @@ namespace RepairMarketPlace
             EmailServerSettings settings = new();
             Configuration.GetSection("EmailServerSettings").Bind(settings);
             services.AddSingleton(settings);
-            /*
-             *  services.AddSingleton(provider =>
-                new EmailServerSettings
-                (
-                    host: "smtp.server.com",
-                    port: 25
-                ));
-             */
             services.AddSingleton<NetworkClient>();
+            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IShopService, ShopService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

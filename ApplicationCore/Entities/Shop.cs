@@ -11,22 +11,35 @@ namespace RepairMarketPlace.ApplicationCore.Entities
     public class Shop : BaseEntity, IAggregateRoot, IUserId
     {
         [Required]
-        public Guid UserId { get; private set; }
+        public Guid UserId { get; set; }
         [Required]
         [MaxLength(200)]
-        public string Name { get; private set; }
+        [DataType(DataType.Text)]
+        [Display(Name = "Shop's Name")]
+        public string Name { get; set; }
         [Required]
-        public string Address { get; private set; }
+        [DataType(DataType.Text)]
+        [Display(Name = "Shop's Address")]
+        public string Address { get; set; }
         [Required]
         [EmailAddress]
-        public string Email { get; private set; }
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Shop's Email")]
+        public string Email { get; set; }
         [Required]
         [Phone]
-        public string PhoneNumber { get; private set; }
-        public string WebSite { get; private set; }
-        public bool IsOpen { get; private set; }
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Shop's Phone Number")]
+        public string PhoneNumber { get; set; }
+        [Url]
+        [DataType(DataType.Url)]
+        [Display(Name = "Shop's Website")]
+        public string WebSite { get; set; }
 
-        public Shop(Guid userId, string name, string address, string email, string phoneNumber, string webSite, bool isOpen)
+        [Display(Name = "Shop's Status")]
+        public bool IsOpen { get; set; }
+
+        public Shop(Guid userId, string name, string address, string email, string phoneNumber, string webSite)
         {
             UserId = userId;
             Name = name;
@@ -34,8 +47,8 @@ namespace RepairMarketPlace.ApplicationCore.Entities
             Email = email;
             PhoneNumber = phoneNumber;
             WebSite = webSite;
-            IsOpen = isOpen;
         }
+
 
         //-----------------------------------------------
         // Relationships
