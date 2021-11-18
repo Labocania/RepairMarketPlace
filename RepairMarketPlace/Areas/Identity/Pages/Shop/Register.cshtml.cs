@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using RepairMarketPlace.ApplicationCore.Exceptions;
 using RepairMarketPlace.ApplicationCore.Interfaces;
 using RepairMarketPlace.Infrastructure.Identity;
 using Web.Extensions;
@@ -103,9 +104,15 @@ namespace Web.Areas.Identity.Pages.Shop
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
-                    await _shopService.CreateShopAsync(Guid.Parse(await _userManager.GetUserIdAsync(user)),
-                        Input.ShopName, Input.ShopAddress, Input.Email, Input.PhoneNumber, Input.WebSite);
+                    try
+                    {
+                        await _shopService.CreateShopAsync(Guid.Parse(await _userManager.GetUserIdAsync(user)),
+                            Input.ShopName, Input.ShopAddress, Input.Email, Input.PhoneNumber, Input.WebSite);
+                    }
+                    catch (SingleShopException ex)
+                    {
+                        _logger.LogError(ex.Message);
+                    }
                     _logger.LogInformation("Shop created.");
 
                     await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("Role", "ShopOwner"));

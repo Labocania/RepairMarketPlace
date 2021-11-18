@@ -57,9 +57,15 @@ namespace RepairMarketPlace.ApplicationCore.Entities
             if (isOpen != IsOpen) IsOpen = isOpen;
         }
 
+        public void AddServiceType(string name, string description)
+        {
+            _serviceTypes.Add(new ServiceType(Id, name, description));
+        }
+
 
         //-----------------------------------------------
         // Relationships
-        public ICollection<ServiceType> ServiceTypes { get; set; }
+        private readonly List<ServiceType> _serviceTypes = new();
+        public IReadOnlyCollection<ServiceType> ServiceTypes => _serviceTypes.AsReadOnly();
     }
 }

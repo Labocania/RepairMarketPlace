@@ -10,17 +10,24 @@ namespace RepairMarketPlace.ApplicationCore.Entities
         public string Name { get; private set; }
         public string Description { get; private set; }
 
-        public ServiceType(string name, string description, int shopId)
+        internal ServiceType(int shopId, string name, string description)
         {
+            ShopId = shopId;
             Name = name;
             Description = description;
-            ShopId = shopId;
+        }
+
+        public void AddComponentType(ComponentType componentType)
+        {
+            _componentTypes.Add(componentType);
         }
 
         //-----------------------------------------------
         // Relationships
         public int ShopId { get; private set; }
         public Shop Shop { get; set; }
-        ICollection<ComponentType> ComponentTypes { get; set; }
+
+        private readonly List<ComponentType> _componentTypes = new();
+        IReadOnlyCollection<ComponentType> ComponentTypes => _componentTypes.AsReadOnly();
     }
 }

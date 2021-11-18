@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using RepairMarketPlace.ApplicationCore.Entities;
+using RepairMarketPlace.ApplicationCore.Exceptions;
 using RepairMarketPlace.ApplicationCore.Interfaces;
 using RepairMarketPlace.ApplicationCore.Interfaces.Repository;
 using RepairMarketPlace.ApplicationCore.Specifications;
@@ -21,6 +22,7 @@ namespace RepairMarketPlace.ApplicationCore.Services
 
         public async Task CreateShopAsync(Guid userId, string name, string address, string email, string phoneNumber, string webSite)
         {
+            if (await GetShopAsync(userId) != null) throw new SingleShopException(email);
             await _shopRepository.AddAsync(new Shop(userId, name, address, email, phoneNumber, webSite));
             await _shopRepository.SaveChangesAsync();
         }
@@ -30,9 +32,22 @@ namespace RepairMarketPlace.ApplicationCore.Services
            return await _shopReadRepository.GetBySpecAsync(new ShopByIdSpec(userId));
         }
 
+        public async Task<Shop> GetShopAsync(int shopId)
+        {
+            return await _shopReadRepository.GetByIdAsync(shopId);
+        }
+
         public async Task UpdateShopAsync(Shop shop)
         {
             await _shopRepository.UpdateAsync(shop);
+        }
+
+        public async Task AddServiceToShop(int shopId, string name, string description)
+        {
+            Shop shop = await GetShopAsync(shopId);
+            Guard.Against.Null<Shop>(shop, nameof(shop));
+            shop.AddServiceType(name, description);
+            await UpdateShopAsync(shop);
         }
     }
 }
