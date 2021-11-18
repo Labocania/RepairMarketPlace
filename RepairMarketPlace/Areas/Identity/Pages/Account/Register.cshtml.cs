@@ -88,6 +88,9 @@ namespace Web.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("Role", "Client"));
+                    _logger.LogInformation("Client claim added.");
+
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(

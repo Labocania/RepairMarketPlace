@@ -1,61 +1,45 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RepairMarketPlace.ApplicationCore.Interfaces;
 using RepairMarketPlace.Infrastructure.Identity;
+using Web.Interfaces;
+using Web.ViewModels;
 
 namespace Web.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize("IsShopOwner")]
     public class ShopModel : PageModel
     {
         private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly IShopProfileViewModelService _shopProfileViewModelService;
         private readonly IShopService _shopService;
 
-        public ShopModel(UserManager<User> userManager, SignInManager<User> signInManager, IShopService shopService)
+        public ShopModel(UserManager<User> userManager, IShopService shopService, 
+                        IShopProfileViewModelService shopProfileViewModelService)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _shopService = shopService;
+            _shopProfileViewModelService = shopProfileViewModelService;
         }
 
         [BindProperty]
-        public InputModel Input { get; set; }
+        public ShopProfileViewModel Input { get; set; }
 
-        public class InputModel
-        {
-            [Required]
-            [DataType(DataType.Text)]
-            [Display(Name = "Shop's Name")]
-            [MaxLength(200)]
-            public string Name { get; set; }
-
-            [Required]
-            [DataType(DataType.Text)]
-            [Display(Name = "Shop's Address")]
-            public string Address { get; set; }
-
-            [Url]
-            [DataType(DataType.Url)]
-            [Display(Name = "Shop's Website")]
-            public string WebSite { get; set; }
-
-            [Display(Name = "Shop's Status")]
-            public bool IsOpen { get; set; }
-        }
+        [TempData]
+        public string StatusMessage { get; set; }
 
         private async Task LoadAsync(User user)
         {
             Guid userId = Guid.Parse(await _userManager.GetUserIdAsync(user));
             RepairMarketPlace.ApplicationCore.Entities.Shop shop = await _shopService.GetShopAsync(userId);
 
-            Input = new InputModel
+            Input = new ShopProfileViewModel
             {
+                UserId = shop.UserId,
                 Name = shop.Name,
                 Address = shop.Address,
                 WebSite = shop.WebSite,
@@ -78,6 +62,8 @@ namespace Web.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+            Input.UserId = Guid.Parse(await _userManager.GetUserIdAsync(user));
+
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -89,29 +75,9 @@ namespace Web.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            Guid userId = Guid.Parse(await _userManager.GetUserIdAsync(user));
-            RepairMarketPlace.ApplicationCore.Entities.Shop shop = await _shopService.GetShopAsync(userId);
-
-            if (Input.Name != shop.Name)
-            {
-                shop.Name = Input.Name;
-            }
-
-            if (Input.Address != shop.Address)
-            {
-                shop.Address = Input.Address;
-            }
-
-            if (Input.WebSite != shop.WebSite)
-            {
-                shop.WebSite = Input.WebSite;
-            }
-
-            if (Input.IsOpen != shop.IsOpen)
-            {
-                shop.IsOpen = Input.IsOpen;
-            }
-            
+            await _shopProfileViewModelService.UpdateShopProfileAsync(Input);
+            StatusMessage = "Your shop has been updated";
+            return RedirectToPage();
         }
     }
 }

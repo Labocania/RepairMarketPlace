@@ -17,6 +17,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Web.Interfaces;
+using Web.Services;
 
 namespace RepairMarketPlace
 {
@@ -55,6 +57,11 @@ namespace RepairMarketPlace
                     googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
                     googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
                 });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsShopOwner",
+                                    policyBuilder => policyBuilder.RequireClaim("Role", "ShopOwner"));
+            });
 
             services.AddRazorPages();
 
@@ -66,6 +73,7 @@ namespace RepairMarketPlace
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
             services.AddScoped<IShopService, ShopService>();
+            services.AddScoped<IShopProfileViewModelService, ShopProfileViewModelService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

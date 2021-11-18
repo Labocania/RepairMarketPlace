@@ -32,14 +32,7 @@ namespace RepairMarketPlace.ApplicationCore.Services
 
         public async Task UpdateShopAsync(Shop shop)
         {
-            Shop shopUpdate = await GetShopAsync(shop.UserId);
-            shopUpdate.Name = shop.Name;
-            shopUpdate.Address = shop.Address;
-            shopUpdate.Email = shop.Email;
-            shopUpdate.PhoneNumber = shop.PhoneNumber;
-            shopUpdate.WebSite = shop.WebSite;
-            shop.IsOpen = shop.IsOpen;
-            await _shopRepository.AddAsync(shopUpdate);
+            await _shopRepository.UpdateAsync(shop);
         }
     }
 }
