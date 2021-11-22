@@ -24,30 +24,27 @@ namespace RepairMarketPlace.ApplicationCore.Services
         {
             if (await GetShopAsync(userId) != null) throw new SingleShopException(email);
             await _shopRepository.AddAsync(new Shop(userId, name, address, email, phoneNumber, webSite));
-            await _shopRepository.SaveChangesAsync();
         }
 
         public async Task<Shop> GetShopAsync(Guid userId)
         {
-           return await _shopReadRepository.GetBySpecAsync(new ShopByIdSpec(userId));
+           return await _shopReadRepository.GetBySpecAsync(new ShopByIdSpec(userId), default);
         }
 
         public async Task<Shop> GetShopAsync(int shopId)
         {
-            return await _shopReadRepository.GetByIdAsync(shopId);
-        }
-
-        public async Task UpdateShopAsync(Shop shop)
-        {
-            await _shopRepository.UpdateAsync(shop);
+            return await _shopReadRepository.GetByIdAsync(shopId, default);
         }
 
         public async Task AddServiceToShop(int shopId, string name, string description)
-        {
+        {           
             Shop shop = await GetShopAsync(shopId);
-            Guard.Against.Null<Shop>(shop, nameof(shop));
+
+            Guard.Against.Null<Shop>(shop, nameof(shop), "Must be an existing shop.");
+            Guard.Against.NullOrEmpty(name, nameof(name), "Name of the service must be provided");
+
             shop.AddServiceType(name, description);
-            await UpdateShopAsync(shop);
+            await _shopRepository.UpdateAsync(shop);
         }
     }
 }

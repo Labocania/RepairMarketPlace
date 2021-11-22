@@ -13,5 +13,10 @@ namespace RepairMarketPlace.ApplicationCore.Specifications
             Query.AsNoTracking()
                 .Where(shop => shop.UserId == userId);
         }
+        public ShopByIdSpec(int id)
+        {
+            Query.AsNoTracking()
+                .Where(shop => shop.Id == id);
+        }
     }
 }
