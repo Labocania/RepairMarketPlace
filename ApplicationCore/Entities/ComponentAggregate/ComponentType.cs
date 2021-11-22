@@ -13,14 +13,9 @@ namespace RepairMarketPlace.ApplicationCore.Entities
         //-----------------------------------------------
         // Relationships
         private HashSet<Component> _components;
-        public IReadOnlyCollection<Component> Components
-        {
-            get
-            {
-                return _components?.ToList();
-            }
-        }
+        public IReadOnlyCollection<Component> Components => _components?.ToList();
 
-        ICollection<ServiceType> ServiceTypes { get; set; }
+        private readonly List<ServiceType> _serviceTypes;
+        IReadOnlyCollection<ServiceType> ServiceTypes => _serviceTypes?.AsReadOnly();
     }
 }

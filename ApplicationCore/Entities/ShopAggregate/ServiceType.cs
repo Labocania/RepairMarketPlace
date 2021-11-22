@@ -27,7 +27,7 @@ namespace RepairMarketPlace.ApplicationCore.Entities
         public int ShopId { get; private set; }
         public Shop Shop { get; set; }
 
-        private readonly List<ComponentType> _componentTypes = new();
-        IReadOnlyCollection<ComponentType> ComponentTypes => _componentTypes.AsReadOnly();
+        private readonly List<ComponentType> _componentTypes;
+        IReadOnlyCollection<ComponentType> ComponentTypes => _componentTypes?.AsReadOnly();
     }
 }

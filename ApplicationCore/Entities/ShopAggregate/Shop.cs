@@ -64,7 +64,7 @@ namespace RepairMarketPlace.ApplicationCore.Entities
 
         //-----------------------------------------------
         // Relationships
-        private readonly List<ServiceType> _serviceTypes = new();
-        public IReadOnlyCollection<ServiceType> ServiceTypes => _serviceTypes.AsReadOnly();
+        private readonly List<ServiceType> _serviceTypes;
+        public IReadOnlyCollection<ServiceType> ServiceTypes => _serviceTypes?.AsReadOnly();
     }
 }

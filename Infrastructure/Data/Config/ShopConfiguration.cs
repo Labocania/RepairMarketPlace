@@ -8,7 +8,7 @@ namespace RepairMarketPlace.Infrastructure.Data.Config
     {
         public void Configure(EntityTypeBuilder<Shop> builder)
         {
-            builder.HasIndex(x => x.Name);
+            builder.HasIndex(x => new { x.Name, x.UserId });
             builder.Property(x => x.WebSite).IsUnicode(false);
         }
     }
