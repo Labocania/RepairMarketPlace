@@ -23,7 +23,7 @@ namespace RepairMarketPlace.ApplicationCore.Entities.ShopAggregate
 
         internal WorkOrder(Guid constumerId, DateTime requestDate,
                  WorkOrderStatus workOrderStatus, string workRemarks, decimal price,
-                 int shopId, Shop shop)
+                 int shopId)
         {
             ConstumerId = constumerId;
             RequestDate = requestDate;
@@ -31,7 +31,6 @@ namespace RepairMarketPlace.ApplicationCore.Entities.ShopAggregate
             WorkRemarks = workRemarks;
             Price = price;
             ShopId = shopId;
-            Shop = shop;
         }
 
         //-----------------------------------------------

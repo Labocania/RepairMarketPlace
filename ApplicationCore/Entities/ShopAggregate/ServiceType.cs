@@ -10,10 +10,9 @@ namespace RepairMarketPlace.ApplicationCore.Entities
         public string Name { get; private set; }
         public string Description { get; private set; }
 
-        internal ServiceType(Shop shop, int shopId, string name, string description)
+        internal ServiceType(int shopId, string name, string description)
         {
             ShopId = shopId;
-            Shop = shop;
             Name = name;
             Description = description;
         }

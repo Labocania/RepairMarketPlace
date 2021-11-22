@@ -61,14 +61,14 @@ namespace RepairMarketPlace.ApplicationCore.Entities
         public void AddServiceType(string name, string description)
         {
             _serviceTypes = new List<ServiceType>();
-            _serviceTypes.Add(new ServiceType(this, Id, name, description));
+            _serviceTypes.Add(new ServiceType(Id, name, description));
         }
 
         public void AddWorkOrder(Guid costumerId, string workRemarks)
         {
             _workOrders = new List<WorkOrder>();
             _workOrders.Add(new WorkOrder(costumerId, DateTime.Now, WorkOrderStatus.WorkRequested, 
-                workRemarks, 0.00m, Id, this));            
+                workRemarks, 0.00m, Id));            
         }
 
         public void UpdateCompletionDate(DateTime completionDate)
