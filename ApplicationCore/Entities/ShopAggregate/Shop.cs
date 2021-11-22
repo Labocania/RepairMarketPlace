@@ -62,7 +62,6 @@ namespace RepairMarketPlace.ApplicationCore.Entities
             _serviceTypes.Add(new ServiceType(Id, name, description));
         }
 
-
         //-----------------------------------------------
         // Relationships
         private readonly List<ServiceType> _serviceTypes = new();

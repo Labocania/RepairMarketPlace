@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RepairMarketPlace.ApplicationCore.Interfaces;
 using RepairMarketPlace.Infrastructure.Identity;
 using Web.Interfaces;
 using Web.ViewModels;
@@ -15,15 +14,12 @@ namespace Web.Areas.Identity.Pages.Account.Manage
     public class ShopModel : PageModel
     {
         private readonly UserManager<User> _userManager;
-        private readonly IShopProfileViewModelService _shopProfileViewModelService;
-        private readonly IShopService _shopService;
+        private readonly IShopProfileViewModelService _viewModelService;
 
-        public ShopModel(UserManager<User> userManager, IShopService shopService, 
-                        IShopProfileViewModelService shopProfileViewModelService)
+        public ShopModel(UserManager<User> userManager, IShopProfileViewModelService viewModelService)
         {
             _userManager = userManager;
-            _shopService = shopService;
-            _shopProfileViewModelService = shopProfileViewModelService;
+            _viewModelService = viewModelService;
         }
 
         [BindProperty]
@@ -35,16 +31,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
         private async Task LoadAsync(User user)
         {
             Guid userId = Guid.Parse(await _userManager.GetUserIdAsync(user));
-            RepairMarketPlace.ApplicationCore.Entities.Shop shop = await _shopService.GetShopAsync(userId);
-
-            Input = new ShopProfileViewModel
-            {
-                UserId = shop.UserId,
-                Name = shop.Name,
-                Address = shop.Address,
-                WebSite = shop.WebSite,
-                IsOpen = shop.IsOpen
-            };
+            Input = await _viewModelService.GetShop(userId);
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -75,7 +62,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            await _shopProfileViewModelService.UpdateShopProfileAsync(Input);
+            await _viewModelService.UpdateShopProfileAsync(Input);
             StatusMessage = "Your shop has been updated";
             return RedirectToPage();
         }
